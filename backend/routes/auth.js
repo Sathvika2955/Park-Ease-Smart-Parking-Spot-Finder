@@ -57,7 +57,7 @@ router.post("/login", async (req, res) => {
         email: user.email,
         role: user.role       // <-- VERY IMPORTANT
     },
-    "secretKey123",
+    "secret123",
     { expiresIn: "1h" }
 );
 
