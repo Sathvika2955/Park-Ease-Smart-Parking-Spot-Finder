@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/user");
 
 const router = express.Router();
 
@@ -92,3 +92,12 @@ router.get("/vehicle", authMiddleware, async (req, res) => {
 });
 
 module.exports = router;
+const token = jwt.sign(
+    {
+        id: user._id,
+        email: user.email,
+        role: user.role       // <-- VERY IMPORTANT
+    },
+    "secretKey123",
+    { expiresIn: "1h" }
+);
