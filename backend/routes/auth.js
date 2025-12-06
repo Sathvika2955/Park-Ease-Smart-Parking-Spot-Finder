@@ -51,9 +51,15 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Incorrect password" });
 
     // Create JWT token
-    const token = jwt.sign({ id: user._id, role: user.role }, "secret123", {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+    {
+        id: user._id,
+        email: user.email,
+        role: user.role       // <-- VERY IMPORTANT
+    },
+    "secretKey123",
+    { expiresIn: "1h" }
+);
 
     res.json({ message: "Login successful", token });
   } catch (error) {
@@ -92,12 +98,3 @@ router.get("/vehicle", authMiddleware, async (req, res) => {
 });
 
 module.exports = router;
-const token = jwt.sign(
-    {
-        id: user._id,
-        email: user.email,
-        role: user.role       // <-- VERY IMPORTANT
-    },
-    "secretKey123",
-    { expiresIn: "1h" }
-);
