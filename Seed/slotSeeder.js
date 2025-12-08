@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Slot = require("../models/slotModel");
  
-mongoose.connect("mongodb+srv://<username>:<password>@cluster.mongodb.net/parking", {
+mongoose.connect("mongodb+srv://parking:parking123@cluster.mongodb.net/parking", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
