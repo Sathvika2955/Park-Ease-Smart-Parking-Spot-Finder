@@ -50,3 +50,5 @@ const MONGO_URI = "mongodb+srv://parking:parking123@cluster0.thuzccq.mongodb.net
 mongoose.connect(MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.error("DB Error:", err));
+const slotRoutes = require("./routes/slotRoutes");
+app.use("/api/slots", slotRoutes);
