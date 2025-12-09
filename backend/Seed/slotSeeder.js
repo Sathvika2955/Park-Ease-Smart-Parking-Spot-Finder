@@ -2,13 +2,7 @@ const mongoose = require("mongoose");
 
 const Slot = require("../models/slotmodel");
  
-mongoose.connect("mongodb+srv://parking:parking123@cluster.mongodb.net/parking", {
-
-    useNewUrlParser: true,
-
-    useUnifiedTopology: true
-
-})
+mongoose.connect("mongodb+srv://parking:parking123@cluster0.thuzccq.mongodb.net/?appName=Cluster0")
 
 .then(() => console.log("DB Connected"))
 
