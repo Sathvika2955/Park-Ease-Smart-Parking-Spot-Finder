@@ -5,6 +5,8 @@ const companyRoutes = require("./routes/company");
 app.use(cors());
 app.use(express.json());
 app.use("/api/company", companyRoutes);
+app.use("/api/project", require("./routes/project"));
+
 
 
  
