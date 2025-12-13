@@ -1,14 +1,12 @@
 .slot-grid {
-
   display: grid;
-
-  grid-template-columns: repeat(5, 80px);
-
-  grid-gap: 15px;
-
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 15px;
   margin-top: 20px;
-
+  max-width: 500px;
 }
+
+
  
 .slot-box {
 
