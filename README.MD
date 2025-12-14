@@ -87,7 +87,6 @@ cd backend
 npm install
 node server.js
 
-### Frontend
-cd react_frontend
-npm install
-npm start
+Server runs on:
+👉 http://localhost:5000
+
