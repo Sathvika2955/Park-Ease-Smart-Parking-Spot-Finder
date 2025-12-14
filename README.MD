@@ -15,7 +15,7 @@ The application supports authentication, role-based access, and visual slot mapp
 
 ---
 
-## Milestone 1: Authentication & Verification 🔐
+## Milestone 1: Authentication & Verification (COMPLETED)🔐
 
 ### Objective
 Implement secure user authentication and authorization with role-based access control.
@@ -40,7 +40,7 @@ Implement secure user authentication and authorization with role-based access co
 
 ---
 
-## Milestone 2: Slot Display & Mapping 🅿️
+## Milestone 2: Slot Display & Mapping-(IN PROGRESS) 🅿️
 
 ### Objective
 Visually represent parking slot availability and map backend data to the frontend UI.
