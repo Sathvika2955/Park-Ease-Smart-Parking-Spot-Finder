@@ -1,62 +1,66 @@
 import React, { useEffect, useState } from "react";
 import SlotCard from "../components/SlotCard";
-import api from "../services/api";
-//import "./SlotList.css";
- 
+import BookingForm from "../components/BookingForm";
+import "../components/SlotGrid.css";
+
+//import api from "../services/api";
+
 const SlotList = () => {
-  // State to store all slots from backend
   const [slots, setSlots] = useState([]);
- 
-  // State to store selected slot
   const [selectedSlot, setSelectedSlot] = useState(null);
- 
-  // Fetch slots from backend when page loads
-  useEffect(() => {
-    api.get("/slots")
-      .then((res) => {
-        setSlots(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching slots:", err);
-      });
-  }, []);
- 
-  // Handle slot selection
+
+ useEffect(() => {
+  fetch("http://localhost:5000/api/slots/all")
+    .then((res) => res.json())
+    .then((data) => {
+      setSlots(data.slots); // ✅ CORRECT
+    })
+    .catch((err) => {
+      console.error("Error fetching slots:", err);
+    });
+}, []);
+
   const handleSelect = (slot) => {
-    // Do not allow selecting booked slots
-    if (slot.status === "BOOKED") return;
+    // ✅ FIX: backend uses isAvailable
+    if (slot.isAvailable === false) return;
     setSelectedSlot(slot);
   };
- 
+
   return (
-<div>
-<h2>Parking Slot Availability</h2>
- 
-      {/* Slot Grid */}
-<div className="slot-grid">
+    <div>
+      <h2>Parking Slot Availability</h2>
+
+      <div className="slot-grid">
         {slots.map((slot) => (
-<SlotCard
-            key={slot._id}
+          <SlotCard
+            key={slot._id || slot.slotNumber}
             slot={slot}
             onSelect={handleSelect}
           />
         ))}
-</div>
- 
-      {/* Selected Slot Information */}
+      </div>
+
       {selectedSlot && (
-<div style={{ marginTop: "20px" }}>
-<h3>Selected Slot Details</h3>
-<p>
-            Slot Number: <strong>{selectedSlot.slotNumber}</strong>
-</p>
-<p>
-            Status: <strong>{selectedSlot.status}</strong>
-</p>
-</div>
+        <>
+          <div style={{ marginTop: "20px" }}>
+            <h3>Selected Slot Details</h3>
+            <p>
+              Slot Number: <strong>{selectedSlot.slotNumber}</strong>
+            </p>
+            <p>
+              Status:{" "}
+              <strong>
+                {selectedSlot.isAvailable ? "AVAILABLE" : "BOOKED"}
+              </strong>
+            </p>
+          </div>
+
+          {/* ✅ Booking form */}
+          <BookingForm slot={selectedSlot} />
+        </>
       )}
-</div>
+    </div>
   );
 };
- 
+
 export default SlotList;
