@@ -1,62 +1,62 @@
 import React, { useEffect, useState } from "react";
-import SlotGrid from "../components/SlotGrid";
-
+import SlotCard from "../components/SlotCard";
+import api from "../services/api";
+//import "./SlotList.css";
+ 
 const SlotList = () => {
+  // State to store all slots from backend
   const [slots, setSlots] = useState([]);
-  const [filteredSlots, setFilteredSlots] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [sortOrder, setSortOrder] = useState("none");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [slotsPerPage] = useState(6);
-
-  const fetchSlots = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/slots/all");
-      const data = await res.json();
-      setSlots(data.slots);
-      setFilteredSlots(data.slots);
-    } catch (error) {
-      console.log("Error fetching slots:", error);
-    }
-  };
-
+ 
+  // State to store selected slot
+  const [selectedSlot, setSelectedSlot] = useState(null);
+ 
+  // Fetch slots from backend when page loads
   useEffect(() => {
-    fetchSlots();
+    api.get("/slots")
+      .then((res) => {
+        setSlots(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching slots:", err);
+      });
   }, []);
-
-  useEffect(() => {
-    let filtered = slots.filter((slot) =>
-      slot.slotNumber.toString().includes(searchText)
-    );
-
-    if (sortOrder === "asc") {
-      filtered = [...filtered].sort((a, b) =>
-        a.slotNumber.localeCompare(b.slotNumber)
-      );
-    } else if (sortOrder === "desc") {
-      filtered = [...filtered].sort((a, b) =>
-        b.slotNumber.localeCompare(a.slotNumber)
-      );
-    }
-
-    setFilteredSlots(filtered);
-  }, [searchText, sortOrder, slots]);
-
-  const indexOfLastSlot = currentPage * slotsPerPage;
-  const indexOfFirstSlot = indexOfLastSlot - slotsPerPage;
-  const currentSlots = filteredSlots.slice(
-    indexOfFirstSlot,
-    indexOfLastSlot
-  );
-
+ 
+  // Handle slot selection
+  const handleSelect = (slot) => {
+    // Do not allow selecting booked slots
+    if (slot.status === "BOOKED") return;
+    setSelectedSlot(slot);
+  };
+ 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Parking Slot List</h2>
-      <h2>Parking Slot Visualization</h2>
-
-      <SlotGrid slots={currentSlots} />
-    </div>
+<div>
+<h2>Parking Slot Availability</h2>
+ 
+      {/* Slot Grid */}
+<div className="slot-grid">
+        {slots.map((slot) => (
+<SlotCard
+            key={slot._id}
+            slot={slot}
+            onSelect={handleSelect}
+          />
+        ))}
+</div>
+ 
+      {/* Selected Slot Information */}
+      {selectedSlot && (
+<div style={{ marginTop: "20px" }}>
+<h3>Selected Slot Details</h3>
+<p>
+            Slot Number: <strong>{selectedSlot.slotNumber}</strong>
+</p>
+<p>
+            Status: <strong>{selectedSlot.status}</strong>
+</p>
+</div>
+      )}
+</div>
   );
 };
-
+ 
 export default SlotList;

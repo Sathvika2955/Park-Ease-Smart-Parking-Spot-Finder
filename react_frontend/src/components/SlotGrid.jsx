@@ -19,3 +19,14 @@ const SlotGrid = ({ slots = [] }) => {
 };
 
 export default SlotGrid;
+{selectedSlot && (
+<div style={{ marginTop: "20px" }}>
+<h3>Selected Slot</h3>
+<p>
+      Slot Number: <strong>{selectedSlot.slotNumber}</strong>
+</p>
+<p>
+      Status: <strong>{selectedSlot.status}</strong>
+</p>
+</div>
+)}
