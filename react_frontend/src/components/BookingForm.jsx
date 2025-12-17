@@ -1,42 +1,44 @@
 import React, { useState } from "react";
 
-const BookingForm = ({ slot }) => {
+const BookingForm = ({ slots = [], onBook }) => {
   const [vehicleNo, setVehicleNo] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [selectedSlot, setSelectedSlot] = useState("");
   const [message, setMessage] = useState("");
+  const [canBook, setCanBook] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ Validation (as you requested)
-    if (!vehicleNo || !slot) {
+    if (!vehicleNo || !selectedSlot) {
       setMessage("Please fill all fields");
+      setCanBook(false);
       return;
     }
 
-    // Clear message if validation passes
-    setMessage("");
+    const slot = slots[Number(selectedSlot) - 1];
 
-    // Temporary success action
-    console.log("Booking Details:", {
-      slotNumber: slot.slotNumber,
-      vehicleNo,
-      startTime,
-      endTime,
-    });
+    if (!slot.isAvailable) {
+      setMessage("Slot already booked");
+      setCanBook(false);
+      return;
+    }
 
-    alert(`Slot ${slot.slotNumber} booked successfully!`);
+    setMessage(`Slot ${selectedSlot} is available`);
+    setCanBook(true);
+  };
 
-    // Optional: clear form
+  const confirmBooking = () => {
+    const slot = slots[Number(selectedSlot) - 1];
+    onBook(slot.slotNumber);
+    setMessage(`Slot ${selectedSlot} booked successfully`);
+    setCanBook(false);
+    setSelectedSlot("");
     setVehicleNo("");
-    setStartTime("");
-    setEndTime("");
   };
 
   return (
-    <div style={{ marginTop: "20px" }}>
-      <h3>Book Slot {slot.slotNumber}</h3>
+    <div style={{ marginTop: "30px" }}>
+      <h3>Book a Slot</h3>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -48,31 +50,30 @@ const BookingForm = ({ slot }) => {
 
         <br /><br />
 
-        <input
-          type="time"
-          value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-        />
+        <select
+          value={selectedSlot}
+          onChange={(e) => setSelectedSlot(e.target.value)}
+        >
+          <option value="">Select Slot</option>
+          {slots.map((_, index) => (
+            <option key={index + 1} value={index + 1}>
+              Slot {index + 1}
+            </option>
+          ))}
+        </select>
 
         <br /><br />
 
-        <input
-          type="time"
-          value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-        />
-
-        <br /><br />
-
-        <button type="submit">Confirm Booking</button>
+        <button type="submit">Check Availability</button>
       </form>
 
-      {/* Error / Info Message */}
-      {message && (
-        <p style={{ color: "red", marginTop: "10px" }}>
-          {message}
-        </p>
+      {canBook && (
+        <button onClick={confirmBooking}>
+          Confirm Booking
+        </button>
       )}
+
+      {message && <p>{message}</p>}
     </div>
   );
 };

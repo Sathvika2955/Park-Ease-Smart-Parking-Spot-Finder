@@ -3,27 +3,35 @@ import SlotCard from "../components/SlotCard";
 import BookingForm from "../components/BookingForm";
 import "../components/SlotGrid.css";
 
-//import api from "../services/api";
-
 const SlotList = () => {
   const [slots, setSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
 
- useEffect(() => {
-  fetch("http://localhost:5000/api/slots/all")
-    .then((res) => res.json())
-    .then((data) => {
-      setSlots(data.slots); // ✅ CORRECT
-    })
-    .catch((err) => {
-      console.error("Error fetching slots:", err);
-    });
-}, []);
+  useEffect(() => {
+    fetch("http://localhost:5000/api/slots/all")
+      .then((res) => res.json())
+      .then((data) => {
+        setSlots(data.slots);
+      })
+      .catch((err) => {
+        console.error("Error fetching slots:", err);
+      });
+  }, []);
 
   const handleSelect = (slot) => {
-    // ✅ FIX: backend uses isAvailable
-    if (slot.isAvailable === false) return;
+    if (!slot.isAvailable) return;
     setSelectedSlot(slot);
+  };
+
+  const markSlotAsBooked = (slotNumber) => {
+    setSlots((prevSlots) =>
+      prevSlots.map((slot) =>
+        slot.slotNumber === slotNumber
+          ? { ...slot, isAvailable: false }
+          : slot
+      )
+    );
+    setSelectedSlot(null);
   };
 
   return (
@@ -55,8 +63,10 @@ const SlotList = () => {
             </p>
           </div>
 
-          {/* ✅ Booking form */}
-          <BookingForm slot={selectedSlot} />
+          <BookingForm
+            slots={slots}
+            onBook={markSlotAsBooked}
+          />
         </>
       )}
     </div>
