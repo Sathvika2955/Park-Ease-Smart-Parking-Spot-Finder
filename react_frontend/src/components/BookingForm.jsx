@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const BookingForm = ({ slots = [], onBook }) => {
+const BookingForm = ({ slots = [], bookSlot }) => {
   const [vehicleNo, setVehicleNo] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
   const [message, setMessage] = useState("");
@@ -29,7 +29,7 @@ const BookingForm = ({ slots = [], onBook }) => {
 
   const confirmBooking = () => {
     const slot = slots[Number(selectedSlot) - 1];
-    onBook(slot.slotNumber);
+    bookSlot(slot.slotNumber);
     setMessage(`Slot ${selectedSlot} booked successfully`);
     setCanBook(false);
     setSelectedSlot("");
